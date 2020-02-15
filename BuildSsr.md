@@ -47,3 +47,63 @@
 * SSR MAC客户端
 
        https://github.com/qinyuhang/ShadowsocksX-NG-R/releases/download/1.4.3-R8-build3/ShadowsocksX-NG-R8.dmg
+
+#### 卸载阿里云盾（安骑士）服务
+
+   ps：如果运行时提示错误，那么需要先安装Microsoft .NET Framework 4
+
+       $ wget http://update.aegis.aliyun.com/download/uninstall.sh
+       $ chmod +x uninstall.sh
+       $ ./uninstall.sh
+       Stopping aegis                                                           [  OK  ]
+       umount: /usr/local/aegis/aegis_debug: mountpoint not found
+       Uninstalling aegis                                                       [  OK  ]
+
+       $ wget http://update.aegis.aliyun.com/download/quartz_uninstall.sh
+       $ chmod +x quartz_uninstall.sh
+       $ ./quartz_uninstall.sh
+       Stopping aegis                                                           [  OK  ]
+       Stopping quartz                                                          [  OK  ]
+       Uninstalling aegis_quartz                                                [  OK  ]
+
+       $ pkill aliyun-service
+       $ rm -rf /etc/init.d/agentwatch /usr/sbin/aliyun-service /usr/local/aegis*
+       $ rm uninstall.sh
+       $ rm quartz_uninstall.sh
+
+#### 阿里云搭建shadowsocksrr服务端
+    
+   1、由于安装的是python 版本的 shadowsocks，所以首先安装pip
+        
+      $ curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
+      $ python get-pip.py
+   
+  2、安装shadowsocks
+     
+      $ pip install --upgrade pip
+      $ pip install shadowsocks
+  
+  3、创建配置文件
+   
+      {
+            "server":"0.0.0.0",
+            "server_port":5678,
+            "local_address": "127.0.0.1",
+            "local_port":1080,
+            "password":"ssh123456",
+            "timeout":120,
+            "method":"chacha20",
+            "obfs":"plain",
+            "protocol":"origin",
+            "fast_open": false,
+            "workers": 1
+        }
+        
+   4、启动shadowsocks
+     
+     #启动
+     ssserver -c /etc/shadowsocks.json -d start
+     #停止
+     ssserver -c /etc/shadowsocks.json -d stop
+     #重启
+     ssserver -c /etc/shadowsocks.json -d restart
